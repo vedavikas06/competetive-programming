@@ -1,1 +1,1 @@
-# solution of eventree in hackerrank..
+Here I will post some of the solutions of good problems(competetive).
