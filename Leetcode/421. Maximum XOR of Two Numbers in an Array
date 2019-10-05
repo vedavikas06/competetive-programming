@@ -1,0 +1,61 @@
+// struct trie{
+//     int value;
+//     trie* child[2];
+// }
+
+class Trie{
+public:
+    int value;
+    Trie *child[2];
+    
+    Trie(){
+        this->child[0] = this->child[1] = NULL;
+        this->value = 0;
+    }
+    
+    void insert(int num){
+        Trie *temp = this;
+        for(int i=31;i>=0;i--){
+            bool bt = (num & (1<<i));
+            if(!temp->child[bt]){
+                temp->child[bt] = new Trie;
+            }
+            temp = temp->child[bt];
+        }
+        temp->value = num;
+    }
+    
+    int xor_find(int num){
+        Trie *temp = this;
+        for(int i=31;i>=0;i--){
+            bool bt = (num & (1<<i));
+            if(temp->child[1-bt]){
+                temp = temp->child[1-bt];
+            }else if(temp->child[bt]){
+                temp = temp->child[bt];
+            }
+        }
+        return temp->value ^ num;
+    }
+    
+};
+
+
+class Solution {
+public:
+    int findMaximumXOR(vector<int>& nums) {
+        if(nums.size()==0){
+            return 0;
+        }
+        Trie *root = new Trie;
+        root->insert(nums[0]);
+        int maxx = INT_MIN,n = nums.size();
+        
+        for(int i=1;i<n;i++){
+            maxx = max(maxx,root->xor_find(nums[i]));
+            root->insert(nums[i]);
+        }
+        return maxx;
+        
+    }
+};
