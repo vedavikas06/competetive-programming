@@ -44,7 +44,7 @@ public:
 class Solution {
 public:
     int findMaximumXOR(vector<int>& nums) {
-        if(nums.size()==0){
+        if(nums.size()==1 || nums.size()==0){
             return 0;
         }
         Trie *root = new Trie;
