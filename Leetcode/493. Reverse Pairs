@@ -1,0 +1,85 @@
+class BIT_tree{
+        
+    public:
+        vector<int> BIT;
+        int N;
+        
+    BIT_tree(int n){
+        N = n;
+        BIT = vector<int> (n+1,0);
+    }
+
+    int get(int index){
+        index = index+1;
+        int sum = 0;
+
+        while(index>0){
+            sum += BIT[index];
+            index -= index & (-index);
+        }
+
+        return sum;
+     }
+
+
+    void update(int index){
+        index = index+1;
+
+        while(index<=N){
+            BIT[index] += 1;
+            index += index & (-index);
+        }
+    }
+
+        
+};
+
+class Solution {
+public:
+    int reversePairs(vector<int>& nums) {
+        
+        if (nums.empty()) return 0;
+        
+        int rev_cnt=0, n=nums.size();
+        
+        vector<long> nums2;
+        for (long num : nums) {
+            nums2.push_back(2*num);
+        }
+        
+        set<long> sorted = convert(nums,nums2);
+        
+        int rank = 0;
+        unordered_map<long, int> ranks;
+        for (long num : sorted) {
+            ranks[num] = ++rank;
+            //cout << num <<  " " << ranks[num] << endl;
+        }
+        
+        
+        BIT_tree bit(rank);
+        
+        for(int i=n-1;i>=0;i--){
+            
+            rev_cnt += bit.get(ranks[nums2[i]/2]-1);
+            bit.update(ranks[nums2[i]]);
+            
+        }
+        
+        return rev_cnt;
+        
+        
+    }
+    
+    set<long> convert(vector<int> nums,vector<long> nums2){
+        set<long> uni;
+        uni.insert(nums.begin(),nums.end());
+        uni.insert(nums2.begin(),nums2.end());
+        
+        return uni;
+    }
+    
+    
+    
+    
+};
